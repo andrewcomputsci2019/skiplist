@@ -237,6 +237,8 @@ To install
 ```bash
 sudo cmake --install build --prefix /usr/local;
 ```
+Do note you can install the library under any prefix if you dont want to add it to your system libs.
+If you do this you will just need to make sure you include that path when cmake searches for libs.
 Use in another project works in two ways:
 1. sub-dir: using add_subdirectory()\
 in this setup you would just add this library 
