@@ -9,4 +9,4 @@
 * C11 generics support
 * FOSS
 
-## Proformance
+## Performance 
