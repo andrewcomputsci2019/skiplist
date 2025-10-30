@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(skiplist LANGUAGES C)
+project(skiplist VERSION 1.0.0 LANGUAGES C)
 
 # enable stricter warnings
 set(CMAKE_C_STANDARD 11)
@@ -10,6 +10,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
 option(BUILD_SHARED_LIBS "Build shared libraries (.so) instead of static (.a)" OFF)
+option(BUILD_TESTS "Build skiplist test program" ON)
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
 # define include dir
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -20,22 +24,24 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 function(add_skiplist_variant NAME SRC_FILE)
     add_library(${NAME} ${SRC_FILE})
     target_include_directories(${NAME}
-        PUBLIC
+            PUBLIC
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:include>
     )
     target_compile_definitions(${NAME} PRIVATE SKIPLIST_BUILD_${NAME})
     target_link_libraries(${NAME} PRIVATE m)
     set_target_properties(${NAME} PROPERTIES
-        OUTPUT_NAME ${NAME}
-        VERSION 1.0.0
-        SOVERSION 1
+            OUTPUT_NAME ${NAME}
+            VERSION ${PROJECT_VERSION}
+            SOVERSION 1
+            EXPORT_NAME ${NAME}
     )
     install(TARGETS ${NAME}
-        EXPORT skiplistTargets
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
+            EXPORT skiplistTargets
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 endfunction()
 
@@ -67,23 +73,36 @@ target_link_libraries(skiplist INTERFACE
 # Install rules
 # ============================================================
 # Install headers
-install(DIRECTORY include/ DESTINATION include)
-
-# Export CMake targets
-install(TARGETS skiplist EXPORT skiplistTargets)
-
-# Generate skiplistConfig.cmake for consumers
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# Export targets to a file
 install(EXPORT skiplistTargets
-    FILE skiplistConfig.cmake
-    NAMESPACE SkipList::
-    DESTINATION lib/cmake/skiplist
+        FILE skiplistTargets.cmake
+        NAMESPACE SkipList::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/skiplist
+)
+# ============================================================
+# Package configuration
+# ============================================================
+# Generate version file
+write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/skiplistConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY AnyNewerVersion
 )
 
+# Generate config file that includes targets
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/skiplistConfig.cmake" "
+include(\"\${CMAKE_CURRENT_LIST_DIR}/skiplistTargets.cmake\")
+")
 
-# todo put exe code below for test and benchmarking etc
+# Install config + version files
+install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/skiplistConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/skiplistConfigVersion.cmake"
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/skiplist
+)
 
 # test build option
-option(BUILD_TESTS "Build skiplist test program" ON)
 if(BUILD_TESTS)
     add_subdirectory(test)
 endif()

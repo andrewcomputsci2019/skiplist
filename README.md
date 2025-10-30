@@ -39,12 +39,14 @@ void     skipList_i32_remove (SkipList_i32 *list, int32_t id);
 bool     skipList_i32_search (SkipList_i32 *list, int32_t search_id);
 uint32_t skipList_i32_getSize(const SkipList_i32 *list);
 bool     skipList_i32_isEmpty(const SkipList_i32 *list);
+bool skipList_i32_pop(SkipList_i32 *list, int32_t * removedID);
 void     skipList_i32_destroy(SkipList_i32 **list);
 void     skipList_i32_print  (SkipList_i32 *list);
 ```
 ### Notes
 * Insertion and search are O(log(n)) expected on average
 * Duplicate insertions will return `false`
+* `pop()` pop furthest left node (ie the smallest value in set)
 * `destroy()` will internally release all internal nodes, freeing and destroying the list, and will set the user provided pointer to null preventing use after free.
 * `print()` provided debug util for visualizing the list at its current state 
 
@@ -66,12 +68,16 @@ bool   skipMap_i32_put     (SkipMap_i32 *sm, int32_t id, void *data);
 void*  skipMap_i32_get     (SkipMap_i32 *sm, int32_t id);
 void*  skipMap_i32_remove  (SkipMap_i32 *sm, int32_t id);
 bool   skipMap_i32_contains(SkipMap_i32 *sm, int32_t id);
+uint32_t skipMap_i32_getSize(const SkipMap_i32 *list);
+bool skipMap_i32_isEmpty(const SkipMap_i32 *list);
+bool skipMap_i32_pop(SkipList_i32 * list, struct SM_i32_kv *sm);
 void   skipMap_i32_destroy (SkipMap_i32 **sm);
 void   skipMap_i32_print   (SkipMap_i32 *sm);
 ```
 ### Notes
 * Keys are stored in sorted ascending order
 * Duplicate insertions will update existing entry ( **note** for **pointer** types this is not recommend as the pointer will **leak**)
+* `pop()` will pop the furthest left node (ie the smallest value in map)
 * `remove()` returns the associated data pointer for user cleanup
 * `destroy()` free all nodes and calls free on associated value type (note do not call this if the values in the map are not heap allocation)  
 
@@ -218,6 +224,26 @@ SkipMap_SM_Circle_Remove(&((Circle){.radius = 1.0, .label = NULL}))
 | `ON_REMOVE_KEY`  | Optional cleanup for key              |
 | `ON_REMOVE_DATA` | Optional cleanup for data             |
 
+
+
+## BUILDING
+to build the library, a CMake version of 3.20 or newer will be required. To output the nessicary build files run
+```bash
+mkdir build;
+cmake -b ./build -DCMAKE_BUILD_TYPE=Release;
+cmake --build build -j
+```
+To install
+```bash
+sudo cmake --install build --prefix /usr/local;
+```
+Use in another project works in two ways:
+1. sub-dir: using add_subdirectory()\
+in this setup you would just add this library 
+via target_link_library and use either the interface lib or a specific target (ie `skiplist_i32` etc.)
+2. install the lib: \
+if you install the lib you can discover the library running the cmake find package command `find_package(SkipList REQUIRED)`.
+after such you can then again link with target link library with `target_link_libraries(YOUR_TARGET PRIVATE SkipList::skiplist)`
 
 ## License
 This project is licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0-only).
