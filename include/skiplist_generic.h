@@ -151,6 +151,18 @@
         return sm ? sm->size == 0 : true;                                                                           \
     }                                                                                                               \
                                                                                                                     \
+    static inline bool SkipList_##NAME##_pop(SkipList_##NAME * list, KEY_TYPE * removedKey){                         \
+        if(SkipList_##NAME##_isEmpty(list) || !removedKey) return false;                                             \
+        Node_##NAME * x = list->header->forward[0];                                                                  \
+        *removedKey = x->key;                                                                                        \
+        for(uint32_t i = 0; i < x->height; i++){                                                                     \
+            list->header->forward[i] = x->forward[i];                                                                \
+        }                                                                                                            \
+        free(x);                                                                                                     \
+        list->size--;                                                                                                \
+        return true;                                                                                                 \
+    }                                                                                                                \
+                                                                                                                     \
     static inline void SkipList_##NAME##_destroy(SkipList_##NAME ** sm){                                              \
         if(!sm || !(*sm)) return;                                                                                   \
         Node_##NAME * x = (*sm)->header->forward[0];                                                                \

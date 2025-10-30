@@ -54,6 +54,10 @@
         uint32_t max_level;                                                          \
         Node_##NAME * header;                                                        \
     }SkipMap_##NAME;                                                                 \
+    struct SM_##NAME##_kv{                                                           \
+        KEY_TYPE key;                                                                \
+        DATA_TYPE value;                                                             \
+    };                                                                               \
                                                                                      \
     static inline uint32_t clamp_level_##NAME(uint32_t lvl){                         \
         if(lvl == 0) return 1;                                                       \
@@ -166,6 +170,19 @@
                                                                                                                     \
     static inline bool SkipMap_##NAME##_isEmpty(SkipMap_##NAME * sm){                                               \
         return sm ? sm->size == 0 : true;                                                                           \
+    }                                                                                                               \
+                                                                                                                    \
+    static inline bool SkipMap_##NAME##_pop(SkipMap_##NAME * sm, struct SM_##NAME##_kv * kv){                       \
+        if(SkipMap_##NAME##_isEmpty(sm) || !kv) return false;                                                      \
+        Node_##NAME * x = sm->header->forward[0];                                                                  \
+        kv->key = x->key;                                                                                           \
+        kv->value = x->data;                                                                                        \
+        for(uint32_t i =0; i < x->height; i++){                                                                     \
+            sm->header->forward[i] = x->forward[i];                                                                 \
+        }                                                                                                           \
+        free(x);                                                                                                    \
+        sm->size--;                                                                                                 \
+        return true;                                                                                                \
     }                                                                                                               \
                                                                                                                     \
     static inline void SkipMap_##NAME##_destroy(SkipMap_##NAME ** sm){                                              \
