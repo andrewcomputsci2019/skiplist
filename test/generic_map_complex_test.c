@@ -76,12 +76,19 @@ int main(void) {
     }
 
     // Remove every circle, triggering free_circle_data
-    for (int i = 0; i < TEST_SIZE; i++) {
+    for (int i = 0; i < TEST_SIZE/2; i++) {
         Circle key = { .radius = i + 1.0, .label = NULL };
         Circle removed = {0};
         bool ok = SkipMap_SM_Circle_remove(sm, key, &removed);
         assert(ok);
         // removed.label is already freed by callback
+    }
+    for (int i = TEST_SIZE/2; i < TEST_SIZE; i++) {
+        struct SM_SM_Circle_kv p;
+        bool ok = SkipMap_SM_Circle_pop(sm,&p);
+        assert(ok);
+        printf("Popped return (%lf,%s)\n",p.key.radius,p.value.label);
+        free(p.value.label);
     }
 
     assert(SkipMap_SM_Circle_isEmpty(sm));

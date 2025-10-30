@@ -85,7 +85,14 @@ int main(void) {
         else
             assert(found);
     }
-
+    // --- test pop func expect 0th key which will be 1 ---
+    Point* p;
+    printf("Popping head of list:\n");
+    bool pop = SkipList_SL_Point_pop(sl, &p);
+    assert(pop);
+    printf("Popped value is: %d\n",p->x);
+    assert(p->x == 1);
+    free(p);
     // --- Destroy skiplist (auto cleanup remaining keys) ---
     printf("Destroying skiplist, expect cleanup for odd keys:\n");
     SkipList_SL_Point_destroy(&sl);
