@@ -30,11 +30,10 @@
 typedef struct SkipList_u64_t SkipList_u64;
 typedef struct SkipList_u64_t SkipMap_u64;
 
-
-// todo add a getSize func
-// todo add a isEmpty func
-// todo add a pop func
-// todo think about adding a pop right func
+struct SM_u64_kv {
+   uint64_t key;
+   void * value;
+};
 
 
 /* ────────────────────────────────────────────────
@@ -47,6 +46,7 @@ void  skipList_u64_remove (SkipList_u64 *list, uint64_t id);
 bool  skipList_u64_search (SkipList_u64 *list, uint64_t search_id);
 uint32_t skipList_u64_getSize(const SkipList_u64 *list);
 bool skipList_u64_isEmpty(const SkipList_u64 *list);
+bool skipList_u64_pop(SkipList_u64 *list, uint64_t * removed_id);
 void  skipList_u64_destroy(SkipList_u64 **list);
 void  skipList_u64_print  (SkipList_u64 *list);
 
@@ -56,7 +56,8 @@ bool   skipMap_u64_put     (SkipMap_u64 *sm, uint64_t id, void *data);
 void*  skipMap_u64_get     (SkipMap_u64 *sm, uint64_t id);
 void*  skipMap_u64_remove  (SkipMap_u64 *sm, uint64_t id);
 bool   skipMap_u64_contains(SkipMap_u64 *sm, uint64_t id);
-uint32_t skipMap_u64_size(SkipMap_u64 *sm);
+uint32_t skipMap_u64_getSize(SkipMap_u64 *sm);
 bool   skipMap_u64_isEmpty(SkipMap_u64 *sm);
+bool skipMap_u64_pop(SkipMap_u64 *sm, struct SM_u64_kv * kv);
 void   skipMap_u64_destroy (SkipMap_u64 **sm);
 void   skipMap_u64_print   (SkipMap_u64 *sm);

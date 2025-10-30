@@ -32,7 +32,10 @@
 typedef struct SkipList_i64_t SkipList_i64;
 typedef struct SkipList_i64_t SkipMap_i64;
 
-
+struct SM_i64_kv {
+   int64_t key;
+   void * value;
+};
 
 /* ────────────────────────────────────────────────
    int64_t SkipList / SkipMap
@@ -44,6 +47,7 @@ void  skipList_i64_remove (SkipList_i64 *list, int64_t id);
 bool  skipList_i64_search (SkipList_i64 *list, int64_t search_id);
 uint32_t skipList_i64_getSize(const SkipList_i64 *list);
 bool skipList_i64_isEmpty(const SkipList_i64 * list);
+bool skipList_i64_pop(SkipList_i64 * list, int64_t * removedID);
 void  skipList_i64_destroy(SkipList_i64 **list);
 void  skipList_i64_print  (SkipList_i64 *list);
 
@@ -53,5 +57,8 @@ bool   skipMap_i64_put     (SkipMap_i64 *sm, int64_t id, void *data);
 void*  skipMap_i64_get     (SkipMap_i64 *sm, int64_t id);
 void*  skipMap_i64_remove  (SkipMap_i64 *sm, int64_t id);
 bool   skipMap_i64_contains(SkipMap_i64 *sm, int64_t id);
+uint32_t skipMap_i64_getSize(const SkipMap_i64 *list);
+bool skipMap_i64_isEmpty(const SkipMap_i64 *list);
+bool skipMap_i64_pop(SkipMap_i64 *list, struct SM_i64_kv * kv);
 void   skipMap_i64_destroy (SkipMap_i64 **sm);
 void   skipMap_i64_print   (SkipMap_i64 *sm);

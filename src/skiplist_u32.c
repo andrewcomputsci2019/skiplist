@@ -326,6 +326,20 @@ bool skipList_u32_isEmpty(const SkipList_u32 *list)
     return list ? list->size == 0 : true;
 }
 
+bool skipList_u32_pop(SkipList_u32 *list, uint32_t *removedID) {
+    if (skipList_u32_isEmpty(list) || !removedID) {
+        return false;
+    }
+    Node_u32 * x = list->header->forward[0];
+    *removedID = x->key;
+    for (uint32_t i = 0; i < x->height; i++) {
+        list->header->forward[i] = x->forward[i];
+    }
+    free(x);
+    list->size--;
+    return true;
+}
+
 void skipList_u32_destroy(SkipList_u32 **list)
 {
     if (!list || !*list) return;
@@ -399,7 +413,29 @@ bool skipMap_u32_contains(SkipMap_u32 *sm, uint32_t id)
     return skipList_u32_search_core(sm, id);
 }
 
-// todo 
+uint32_t skipMap_u32_getSize(const SkipMap_u32 *sm) {
+    return sm ? sm->size : 0;
+}
+
+bool skipMap_u32_isEmpty(const SkipMap_u32 *sm) {
+    return sm ? sm->size == 0 : true;
+}
+
+bool skipMap_u32_pop(SkipMap_u32 *list, struct SM_u32_kv *kv) {
+    if (skipMap_u32_isEmpty(list) || !kv) {
+        return false;
+    }
+    Node_u32 * x = list->header->forward[0];
+    kv->key = x->key;
+    kv->value = x->data;
+    for (uint32_t i = 0; i < x->height; i++) {
+        list->header->forward[i] = x->forward[i];
+    }
+    free(x);
+    list->size--;
+    return true;
+}
+
 void skipMap_u32_destroy(SkipMap_u32 **sm)
 {
     if(!sm || !(*sm)) return;
@@ -427,7 +463,7 @@ void skipMap_u32_print(SkipMap_u32 *sm)
         Node_u32 * x = sm->header->forward[i];
         printf("level %d: -->\t", i);
         while(x){
-            printf("(%u, %lX)-->",x->key, x->data);
+            printf("(%u, %lX)-->",x->key, (unsigned long)x->data);
         }
         printf("nil\n");
     }

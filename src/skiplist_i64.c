@@ -275,6 +275,20 @@ bool skipList_i64_isEmpty(const SkipList_i64 *list)
     return list ? list->size == 0 : true;
 }
 
+bool skipList_i64_pop(SkipList_i64 *list, int64_t *removedID) {
+    if (skipList_i64_isEmpty(list) || !removedID) {
+        return false;
+    }
+    Node_i64 * x = list->header->forward[0];
+    *removedID = x->key;
+    for (uint32_t i=0; i < x->height; i++) {
+        list->header->forward[i] = x->forward[i];
+    }
+    free(x);
+    list->size--;
+    return true;
+}
+
 void skipList_i64_destroy(SkipList_i64 **list)
 {
     if (!list || !*list) return;
@@ -342,6 +356,29 @@ bool skipMap_i64_contains(SkipMap_i64 *sm, int64_t id)
     return skipList_i64_search_core(sm,id);
 }
 
+uint32_t skipMap_i64_getSize(const SkipMap_i64 *sm) {
+    return sm ? sm->size : 0;
+}
+
+bool skipMap_i64_isEmpty(const SkipMap_i64 *sm) {
+    return sm ? sm->size == 0 : true;
+}
+
+bool skipMap_i64_pop(SkipMap_i64 * list, struct SM_i64_kv * kv) {
+    if (skipMap_i64_isEmpty(list)||!kv) {
+        return false;
+    }
+    Node_i64 * x = list->header->forward[0];
+    kv->key = x->key;
+    kv->value = x->data;
+    for (uint32_t i=0; i < x->height; i++) {
+        list->header->forward[i] = x->forward[i];
+    }
+    free(x);
+    list->size--;
+    return true;
+}
+
 void skipMap_i64_destroy(SkipMap_i64 **sm)
 {
     if(!sm || !(*sm)) return;
@@ -369,7 +406,7 @@ void skipMap_i64_print(SkipMap_i64 *sm)
         Node_i64 * x = sm->header->forward[i];
         printf("level %d: -->\t", i);
         while(x){
-            printf("(%ld, %lX)-->",x->key, x->data);
+            printf("(%lld, %lX)-->",x->key, (unsigned long)x->data);
         }
         printf("nil\n");
     }      

@@ -269,7 +269,20 @@ bool skipList_u64_isEmpty(const SkipList_u64 *list)
     return list ? list->size == 0: false;
 }
 
-// todo
+bool skipList_u64_pop(SkipList_u64 *list, uint64_t *removed_id) {
+    if (skipList_u64_isEmpty(list) || !removed_id) {
+        return false;
+    }
+    Node_u64 * x = list->header->forward[0];
+    *removed_id = x->key;
+    for (uint32_t i = 0; i < x->height; i++) {
+        list->header->forward[i] = x->forward[i];
+    }
+    free(x);
+    list->size--;
+    return true;
+}
+
 void skipList_u64_destroy(SkipList_u64 **list)
 {
     if (!list || !*list) return;
@@ -336,7 +349,7 @@ bool skipMap_u64_contains(SkipMap_u64 *sm, uint64_t id)
     return skipList_u64_search(sm, id);
 }
 
-uint32_t skipMap_u64_size(SkipMap_u64 *sm)
+uint32_t skipMap_u64_getSize(SkipMap_u64 *sm)
 {
     return sm ? sm->size : 0;
 }
@@ -344,6 +357,21 @@ uint32_t skipMap_u64_size(SkipMap_u64 *sm)
 bool skipMap_u64_isEmpty(SkipMap_u64 *sm)
 {
     return sm ? sm->size == 0 : true;
+}
+
+bool skipMap_u64_pop(SkipMap_u64 *sm, struct SM_u64_kv *kv) {
+    if (skipMap_u64_isEmpty(sm) || !kv) {
+        return false;
+    }
+    Node_u64 * x = sm->header->forward[0];
+    kv->key = x->key;
+    kv->value = x->data;
+    for (uint32_t i = 0; i < x->height; i++) {
+        sm->header->forward[i] = x->forward[i];
+    }
+    free(x);
+    sm->size--;
+    return true;
 }
 
 void skipMap_u64_destroy(SkipMap_u64 **sm)

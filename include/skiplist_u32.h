@@ -30,6 +30,11 @@
 typedef struct SkipList_u32_t SkipList_u32;
 typedef struct SkipList_u32_t SkipMap_u32;
 
+struct SM_u32_kv {
+   uint32_t key;
+   void * value;
+};
+
 
 /* ────────────────────────────────────────────────
    uint32_t SkipList / SkipMap
@@ -43,6 +48,7 @@ void  skipList_u32_remove (SkipList_u32 *list, uint32_t id);
 bool  skipList_u32_search (SkipList_u32 *list, uint32_t search_id);
 uint32_t skipList_u32_getSize(const SkipList_u32 *list);
 bool skipList_u32_isEmpty(const SkipList_u32 *list);
+bool skipList_u32_pop(SkipList_u32 * list, uint32_t * removedID);
 void  skipList_u32_destroy(SkipList_u32 **list);
 void  skipList_u32_print  (SkipList_u32 *list);
 
@@ -53,5 +59,8 @@ bool   skipMap_u32_put     (SkipMap_u32 *sm, uint32_t id, void *data);
 void*  skipMap_u32_get     (SkipMap_u32 *sm, uint32_t id);
 void*  skipMap_u32_remove  (SkipMap_u32 *sm, uint32_t id);
 bool   skipMap_u32_contains(SkipMap_u32 *sm, uint32_t id);
+uint32_t skipMap_u32_getSize(const SkipMap_u32 *list);
+bool skipMap_u32_isEmpty(const SkipMap_u32 *list);
+bool skipMap_u32_pop(SkipMap_u32 *list, struct SM_u32_kv *kv);
 void   skipMap_u32_destroy (SkipMap_u32 **sm);
 void   skipMap_u32_print   (SkipMap_u32 *sm);
