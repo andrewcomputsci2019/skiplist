@@ -29,8 +29,8 @@ All timings are in ns.
 
 
 ## List interface
-ipLists represent ordered sets — no duplicate keys are allowed.
-Each typed variant (`i32`, `u32`, `i64`, `u64`) exposes identical APIs differing only by type. \
+skipLists represent ordered sets — no duplicate keys are allowed.
+Each typed variant (`i32`, `u32`, `i64`, `u64`) exposes identical APIs differing only by type.
 ### Example (i32)
 ```c
 SkipList_i32* skipList_i32_create(void);
