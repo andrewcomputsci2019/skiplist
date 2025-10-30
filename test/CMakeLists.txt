@@ -23,6 +23,7 @@ add_skiplist_test(generic_map_test generic_map_test.c)
 add_skiplist_test(generic_map_complex_test generic_map_complex_test.c)
 add_skiplist_test(generic_list_test generic_list_test.c)
 add_skiplist_test(generic_list_complex_test generic_list_complex_test.c)
+add_skiplist_test(test_pop test_pop.c)
 
 add_executable(bench_mark main.c)
 target_link_libraries(bench_mark PRIVATE skiplist m)
