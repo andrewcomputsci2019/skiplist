@@ -95,9 +95,9 @@ void test_skipmap_i32(void) {
     SkipMap_i32 *map = skipMap_i32_create();
 
     for (int i = 1; i <= TEST_SIZE; i++)
-        CHECK(skipMap_i32_put(map, i, i * 10), "insert map i32");
+        CHECK(skipMap_i32_put(map, i, (void*)(i * 10)), "insert map i32");
 
-    CHECK(skipMap_i32_put(map, 1, 999), "update existing key (i32)");
+    CHECK(skipMap_i32_put(map, 1, (void*)(999)), "update existing key (i32)");
 
     // Remove all keys before destroy
     for (int i = 1; i <= TEST_SIZE; i++)
@@ -113,9 +113,9 @@ void test_skipmap_u32(void) {
     SkipMap_u32 *map = skipMap_u32_create();
 
     for (uint32_t i = 1; i <= TEST_SIZE; i++)
-        CHECK(skipMap_u32_put(map, i, i * 10), "insert map u32");
+        CHECK(skipMap_u32_put(map, i, (void*)(i * 10)), "insert map u32");
 
-    CHECK(skipMap_u32_put(map, 1, 999), "update existing key (u32)");
+    CHECK(skipMap_u32_put(map, 1, (void*)999), "update existing key (u32)");
 
     for (uint32_t i = 1; i <= TEST_SIZE; i++)
         skipMap_u32_remove(map, i);
@@ -130,9 +130,9 @@ void test_skipmap_i64(void) {
     SkipMap_i64 *map = skipMap_i64_create();
 
     for (int64_t i = 1; i <= TEST_SIZE; i++)
-        CHECK(skipMap_i64_put(map, i, i * 10), "insert map i64");
+        CHECK(skipMap_i64_put(map, i, (void*)(i * 10)), "insert map i64");
 
-    CHECK(skipMap_i64_put(map, 1, 999), "update existing key (i64)");
+    CHECK(skipMap_i64_put(map, 1, (void*)(999)), "update existing key (i64)");
 
     for (int64_t i = 1; i <= TEST_SIZE; i++)
         skipMap_i64_remove(map, i);
@@ -147,9 +147,9 @@ void test_skipmap_u64(void) {
     SkipMap_u64 *map = skipMap_u64_create();
 
     for (uint64_t i = 1; i <= TEST_SIZE; i++)
-        CHECK(skipMap_u64_put(map, i, i * 10), "insert map u64");
+        CHECK(skipMap_u64_put(map, i, (void*)(i * 10)), "insert map u64");
 
-    CHECK(skipMap_u64_put(map, 1, 999), "update existing key (u64)");
+    CHECK(skipMap_u64_put(map, 1, (void*)(999)), "update existing key (u64)");
 
     for (uint64_t i = 1; i <= TEST_SIZE; i++)
         skipMap_u64_remove(map, i);
